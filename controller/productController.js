@@ -4,8 +4,13 @@ import { isAdmin } from "./userController.js";
 export async function getProducts(req,res){
 
     try{
-        const products = await Product.find()
-        res.json(products)       
+        if(isAdmin(req)){
+            const products = await Product.find()
+            res.json(products)       
+        }else{
+            const products = await Product.find({isAvailable : true})
+            res.json(products)  
+        }
     }catch(err){
         res.json({
             message : "Failed to get products",
